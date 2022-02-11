@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://kit.fontawesome.com/93f0db1840.js" crossorigin="anonymous"></script>
+    <title>Birthday App</title>
+    <link rel="icon" type="image/x-icon" href="panda.png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="top">
+            <div class="form">
+                <div class="title">Enter new user</div>
+                <div class="input-container ic1">
+                    <input id="firstname" class="input firstname" type="text" placeholder=" " />
+                    <div class="cut"></div>
+                    <label for="firstname" class="placeholder">First name</label>
+                </div>
+               <div class="input-container ic2">
+                    <input id="birthday-date" class="input birthday-date" type="date" min="1900-01-01" max="2022-02-14" placeholder=" " />
+                    <div class="cut cut-long"></div>
+                    <label for="birthday-date" class="placeholder">Date of birth</label>
+                </div>
+                <div class="input-container ic2">
+                    <input id="email" class="input e-mail" type="email" placeholder=" " />
+                    <div class="cut cut-short"></div>
+                    <label for="email" class="placeholder">Email:</label>
+                </div>
+                <div class="input-container ic2">
+                    <input id="phone" class="input phone-number" type="tel" placeholder=" " />
+                    <div class="cut cut-short"></div>
+                    <label for="phone" class="placeholder">Phone</label>
+                </div>
+                <p class="error-message"></p>
+                <button type="submit" class="btn-add">Submit</button>
+            </div>
+            <div class="calendar">
+                <h1>Calendar (soon)</h1>
+            </div>
+        </div>
+        <div class="bottom">
+            <ul class="card-list">
+            </ul>
+        </div>
+
+    </div>
+    <div class="popup">
+        <h3>Edit Data:</h3>
+        <div class="popup-body">
+            <p class="popup-info"></p>
+            <input type="text" class="popup-firstname" placeholder="Enter new first name.">
+            <input type="text" class="popup-birthday-date" placeholder="Enter new date of birth.">
+            <input type="text" class="popup-e-mail" placeholder="Enter new e-mail.">
+            <input type="text" class="popup-phone-number" placeholder="Enter new phone number.">
+        </div>
+        <div class="popup-buttons">
+            <button class="popup-btn accept">Submit</button>
+            <button class="popup-btn cancel">Cancel</button>
+        </div>
+    </div>
+<script src="js.js"></script>
+</body>
+</html>
