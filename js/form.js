@@ -175,7 +175,7 @@ const deleteData = (e) => {
     e.target.closest('li').remove()
     const allData = cardList.querySelectorAll('li')
     if (allData.length === 0) {
-        cardList.textContent = 'List is empty.'
+        cardList.textContent = ''
     }
 
     events = events.filter(e => e.birthday !== clicked);
