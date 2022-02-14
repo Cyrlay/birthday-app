@@ -1,27 +1,19 @@
 let firstName, birthDate, email, phoneNumber, addBtn, cardList, popUp, popUpInfo, UserDataEdit, popUpFirstName,
     popUpBirthdayDate, popUpEmail, popUpPhoneNumber, popUpAddBtn, popUpCloseBtn, errorInfo, childData, userFirstName,
-    userDateOfBirth, userEmailAddress, userPhoneNumber, modal, nav = 0, clicked = null
+    userDateOfBirth, userEmailAddress, userPhoneNumber, modal, navigation, labels, calendar, modalUserName,
+    modalDateOfBirth, modalEmail, modalPhone, imageDescription, closeButton, resultIMG, resultDescription, nav = 0, clicked = null
 
-let events = localStorage.getItem('events') ? JSON.parse(localStorage.getItem('events')) : [];
-const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+let events = localStorage.getItem('events') ? JSON.parse(localStorage.getItem('events')) : []
+const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
 let phoneFormat = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{3})$/
 let emailFormat = /^\w+([ .-]?\w+)*@\w+([ .-]?\w+)*(\.\w{2,3})+$/
 let dateFormat = /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/
 
-const navigation = document.querySelector('.cld-datetime')
-const labels = document.querySelector('.cld-labels')
-const calendar = document.querySelector('.cld-days')
-let modalUserName = document.querySelector('.modal-user-name')
-let modalDateOfBirth = document.querySelector('.modal-date-of-birth')
-let modalEmail = document.querySelector('.modal-email')
-let modalPhone = document.querySelector('.modal-phone')
-let imageDescription = document.querySelector('.image-description')
-let closeButton = document.querySelector('.close-button')
-
 const main = () => {
     prepareDOMElements()
     prepareDOMEvents()
+    createListFromLocalStorage()
 }
 
 const prepareDOMElements = () => {
@@ -42,11 +34,19 @@ const prepareDOMElements = () => {
     popUpCloseBtn = document.querySelector('.cancel')
     errorInfo = document.querySelector('.error-message')
 
+    navigation = document.querySelector('.cld-datetime')
+    labels = document.querySelector('.cld-labels')
+    calendar = document.querySelector('.cld-days')
     modal = document.getElementById('modalEvent');
+    modalUserName = document.querySelector('.modal-user-name')
+    modalDateOfBirth = document.querySelector('.modal-date-of-birth')
+    modalEmail = document.querySelector('.modal-email')
+    modalPhone = document.querySelector('.modal-phone')
+    imageDescription = document.querySelector('.image-description')
+    closeButton = document.querySelector('.close-button')
 }
 
 const prepareDOMEvents = () => {
-
     addBtn.addEventListener('click', addNewDate)
     popUpCloseBtn.addEventListener('click', closePopUp)
     popUpAddBtn.addEventListener('click', changeUserData)
@@ -76,6 +76,7 @@ const addNewDate = () => {
         const newCard = document.createElement('li')
         newCard.classList.add('note')
         saveEventInLocalStorage()
+
         singleCard(newCard)
         createTools(newCard)
         cardList.append(newCard)
@@ -91,39 +92,54 @@ const addNewDate = () => {
 
 const singleCard = (x) => {
 
-    const eventForDay = events.find(element => element.date === birthDate.value);
+    const card = document.createElement('div')
+    card.classList.add('card-details')
+    x.append(card)
 
-    if (eventForDay) {
-        const card = document.createElement('div')
-        card.classList.add('card-details')
-        x.append(card)
+    const name = document.createElement('p')
+    name.textContent = firstName.value
+    const dateOfBirth = document.createElement('p')
+    dateOfBirth.textContent = birthDate.value
+    const eMail = document.createElement('p')
+    eMail.textContent = email.value
+    const phone = document.createElement('p')
+    phone.textContent = phoneNumber.value
 
-        const name = document.createElement('p')
-        name.textContent = eventForDay.name
-        const dateOfBirth = document.createElement('p')
-        dateOfBirth.textContent = eventForDay.date
-        const eMail = document.createElement('p')
-        eMail.textContent = eventForDay.email
-        const phone = document.createElement('p')
-        phone.textContent = eventForDay.phone
+    card.append(name, dateOfBirth, eMail, phone)
+}
 
-        card.append(name, dateOfBirth, eMail, phone)
+const createListFromLocalStorage = () => {
+
+    if (events.length === 0) {
+        console.log('List is empty')
     } else {
-        const card = document.createElement('div')
-        card.classList.add('card-details')
-        x.append(card)
-
-        const name = document.createElement('p')
-        name.textContent = firstName.value
-        const dateOfBirth = document.createElement('p')
-        dateOfBirth.textContent = birthDate.value
-        const eMail = document.createElement('p')
-        eMail.textContent = email.value
-        const phone = document.createElement('p')
-        phone.textContent = phoneNumber.value
-
-        card.append(name, dateOfBirth, eMail, phone)
+        for (let i = 0; i < events.length; i++) {
+            const newCard = document.createElement('li')
+            newCard.classList.add('note')
+            createCardFromLocalStorage(newCard, i)
+            createTools(newCard)
+            cardList.append(newCard)
+        }
     }
+}
+
+const createCardFromLocalStorage = (x, i) => {
+
+    const card = document.createElement('div')
+    card.classList.add('card-details')
+    x.append(card)
+
+    const name = document.createElement('p')
+    name.textContent = events[i].name
+    const dateOfBirth = document.createElement('p')
+    dateOfBirth.textContent = events[i].dateF2
+    const eMail = document.createElement('p')
+    eMail.textContent = events[i].email
+    const phone = document.createElement('p')
+    phone.textContent = events[i].phone
+
+    card.append(name, dateOfBirth, eMail, phone)
+
 }
 
 const createTools = (x) => {
@@ -178,8 +194,8 @@ const deleteData = (e) => {
         cardList.textContent = ''
     }
 
-    events = events.filter(e => e.birthday !== clicked);
-    localStorage.setItem('events', JSON.stringify(events));
+    events = events.filter(e => e.birthday !== clicked)
+    localStorage.setItem('events', JSON.stringify(events))
 }
 
 const closePopUp = () => {
@@ -208,10 +224,8 @@ const changeUserData = () => {
     }
 }
 
-
-let resultIMG, resultDescription
-
-const apiKEY = 'MEJwDqfmlSOP7hFT8uZTgpOMzP0zDrKG7KbL6FYh'
+/*const apiKEY = 'MEJwDqfmlSOP7hFT8uZTgpOMzP0zDrKG7KbL6FYh'*/
+const apiKEY = 'lHF6o4HPxckX9Hy3GBsuliyQYDUljIhJhSR4qTRl'
 const URL = 'https://api.nasa.gov/planetary/apod?api_key=' + apiKEY
 
 axios.get(URL).then(res => {
@@ -232,8 +246,8 @@ axios.get(URL).then(res => {
 
 const openModal = date => {
 
-    clicked = date;
-    const eventForDay = events.find(e => e.birthday === clicked);
+    clicked = date
+    const eventForDay = events.find(e => e.birthday === clicked)
 
     if (eventForDay) {
 
@@ -256,10 +270,10 @@ const openModal = date => {
     } else {
         console.log('Its not a event day')
     }
-    modal.style.display = 'flex';
-    modal.style.flexDirection = 'column';
-    modal.style.alignItems = 'center';
-    modal.style.justifyContent = 'center';
+    modal.style.display = 'flex'
+    modal.style.flexDirection = 'column'
+    modal.style.alignItems = 'center'
+    modal.style.justifyContent = 'center'
 };
 
 const closeModal = () => {
@@ -271,18 +285,18 @@ const closeModal = () => {
 
 const refreshCalendar = () => {
 
-    const dt = new Date();
+    const dt = new Date()
 
     if (nav !== 0) {
-        dt.setMonth(new Date().getMonth() + nav);
+        dt.setMonth(new Date().getMonth() + nav)
     }
 
-    const day = dt.getDate();
-    const month = dt.getMonth();
-    const year = dt.getFullYear();
+    const day = dt.getDate()
+    const month = dt.getMonth()
+    const year = dt.getFullYear()
 
-    const firstDayOfMonth = new Date(year, month, 1);
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const firstDayOfMonth = new Date(year, month, 1)
+    const daysInMonth = new Date(year, month + 1, 0).getDate()
 
     const dateString = firstDayOfMonth.toLocaleDateString('en-us', {
         weekday: 'long',
@@ -290,7 +304,7 @@ const refreshCalendar = () => {
         month: 'numeric',
         day: 'numeric',
     });
-    const paddingDays = weekdays.indexOf(dateString.split(', ')[0]);
+    const paddingDays = weekdays.indexOf(dateString.split(', ')[0])
 
     /*document.getElementById('monthDisplay').innerText = `${dt.toLocaleDateString('en-us', {month: 'long'})} ${year}`*/
 
@@ -330,25 +344,25 @@ const refreshCalendar = () => {
     };
 
     const AddLabels = () => {
-        labels.textContent = '';
-        const labelsList = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        labels.textContent = ''
+        const labelsList = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
         for (let i = 0; i < labelsList.length; i++) {
-            let label = document.createElement('li');
-            label.className += "cld-label";
-            label.textContent = labelsList[i];
-            labels.appendChild(label);
+            let label = document.createElement('li')
+            label.className += "cld-label"
+            label.textContent = labelsList[i]
+            labels.appendChild(label)
         }
     };
 
     const AddDays = () => {
 
-        calendar.textContent = '';
+        calendar.textContent = ''
         for (let i = 1; i <= paddingDays + daysInMonth; i++) {
-            const daySquare = document.createElement('li');
-            daySquare.classList.add('cld-day');
+            const daySquare = document.createElement('li')
+            daySquare.classList.add('cld-day')
 
             const dayNumber = document.createElement('p')
-            dayNumber.classList.add('cld-number');
+            dayNumber.classList.add('cld-number')
             daySquare.appendChild(dayNumber)
 
             /*const dayString = `${i - paddingDays}/${month + 1}/${year}`;
@@ -358,8 +372,8 @@ const refreshCalendar = () => {
 
             if (i > paddingDays) {
 
-                const eventForDay = events.find(element => element.birthday === MyBirthdayDateString);
-                dayNumber.innerText = i - paddingDays;
+                const eventForDay = events.find(element => element.birthday === MyBirthdayDateString)
+                dayNumber.innerText = i - paddingDays
 
                 if (i - paddingDays === day && nav === 0) {
                     daySquare.classList.add('today')
@@ -367,39 +381,41 @@ const refreshCalendar = () => {
 
                 if (eventForDay) {
 
+                    console.log(eventForDay.date)
+
                     const convertDate = eventForDay.date.replace(/[/]/g, '-')
                     const reversedDate = convertDate.split("-").reverse().join("-")
 
                     function getAge(dateString) {
-                        let today = new Date();
-                        let birthDate = new Date(dateString);
-                        let age = dt.getFullYear() - birthDate.getFullYear();
-                        let m = dt.getMonth() - birthDate.getMonth();
+                        let today = new Date()
+                        let birthDate = new Date(dateString)
+                        let age = dt.getFullYear() - birthDate.getFullYear()
+                        let m = dt.getMonth() - birthDate.getMonth()
                         if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-                            age--;
+                            age--
                         }
-                        return age;
+                        return age
                     }
 
                     daySquare.style.backgroundImage = `url('${resultIMG}')`
                     dayNumber.classList.add('eventday')
                     dayNumber.innerText = `${eventForDay.name} \n ${eventForDay.email} \n ${eventForDay.phone} \n Age: ${getAge(reversedDate)}`
-                    daySquare.addEventListener('click', () => openModal(MyBirthdayDateString));
+                    daySquare.addEventListener('click', () => openModal(MyBirthdayDateString))
                 }
             } else {
                 dayNumber.textContent = '*'
-                daySquare.classList.add('prevMonth');
+                daySquare.classList.add('prevMonth')
             }
-            calendar.appendChild(daySquare);
+            calendar.appendChild(daySquare)
         }
 
         for (let i = paddingDays + daysInMonth; i < 42; i++) {
-            const daySquare = document.createElement('li');
-            daySquare.classList.add('cld-day');
-            daySquare.classList.add('nextMonth');
+            const daySquare = document.createElement('li')
+            daySquare.classList.add('cld-day')
+            daySquare.classList.add('nextMonth')
 
             const dayNumber = document.createElement('p')
-            dayNumber.classList.add('cld-number');
+            dayNumber.classList.add('cld-number')
             dayNumber.textContent = '*'
             daySquare.appendChild(dayNumber)
 
@@ -420,6 +436,7 @@ const saveEventInLocalStorage = () => {
 
     events.push({
         date: inputBirthDate,
+        dateF2: birthDate.value,
         birthday: inputBirthDate.slice(0, 5),
         name: firstName.value,
         email: email.value,
