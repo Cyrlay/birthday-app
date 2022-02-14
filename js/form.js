@@ -416,11 +416,12 @@ const refreshCalendar = () => {
 
                     const convertDate = eventForDay.dateF2.replace(/[/]/g, '-')
                     const reversedDate = convertDate.split("-").reverse().join("-")
+                    const reversedDateYear = new Date(eventForDay.dateF2).getFullYear()
 
                     function getAge(dateString) {
                         let today = new Date()
                         let birthDate = new Date(dateString)
-                        let age = dt.getFullYear() - birthDate.getFullYear()
+                        let age = year - reversedDateYear
                         let m = dt.getMonth() - birthDate.getMonth()
                         if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
                             age--
@@ -430,7 +431,7 @@ const refreshCalendar = () => {
 
                     daySquare.style.backgroundImage = `url('${resultIMG}')`
                     dayNumber.classList.add('eventday')
-                    dayNumber.innerText = `${eventForDay.name} \n ${eventForDay.email} \n ${eventForDay.phone} \n Age: ${getAge(reversedDate)}`
+                    dayNumber.innerText = `${eventForDay.name} \n ${eventForDay.email} \n ${eventForDay.phone} \n Age: ${getAge(reversedDateYear)}`
                     daySquare.addEventListener('click', () => openModal(MyBirthdayDateString))
                 }
             } else {
