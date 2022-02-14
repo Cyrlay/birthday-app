@@ -1,7 +1,8 @@
 let firstName, birthDate, email, phoneNumber, addBtn, cardList, popUp, popUpInfo, UserDataEdit, popUpFirstName,
     popUpBirthdayDate, popUpEmail, popUpPhoneNumber, popUpAddBtn, popUpCloseBtn, errorInfo, childData, userFirstName,
     userDateOfBirth, userEmailAddress, userPhoneNumber, modal, navigation, labels, calendar, modalUserName,
-    modalDateOfBirth, modalEmail, modalPhone, imageDescription, closeButton, resultIMG, resultDescription, nav = 0, clicked = null
+    modalDateOfBirth, modalEmail, modalPhone, imageDescription, closeButton, resultIMG, resultDescription, nav = 0,
+    clicked = null
 
 let events = localStorage.getItem('events') ? JSON.parse(localStorage.getItem('events')) : []
 const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
@@ -183,6 +184,11 @@ const editData = (e) => {
 
     popUp.style.display = 'flex'
 
+    for (let i = 0; i < events.length; i++) {
+        if (userDateOfBirth.textContent === events[i].dateF2) {
+            events[i].name = 'japko'
+        }
+    }
 }
 
 const deleteData = (e) => {
@@ -197,11 +203,12 @@ const deleteData = (e) => {
         cardList.textContent = ''
     }
 
-    for (let i = 0; i < events.length; i++){
-        if(userDateOfBirth.textContent === events[i].dateF2){
-            console.log('asd')
+    for (let i = 0; i < events.length; i++) {
+        if (userDateOfBirth.textContent === events[i].dateF2) {
+            console.log('Record Deleted.')
             events = events.filter(e => e.dateF2 !== userDateOfBirth.textContent)
             localStorage.setItem('events', JSON.stringify(events))
+            refreshCalendar()
         }
     }
 }
@@ -222,10 +229,26 @@ const changeUserData = () => {
     } else if (!popUpBirthdayDate.value.match(dateFormat)) {
         popUpInfo.textContent = 'Wrong date format.'
     } else {
+
+        const tempBirthdayDate = userDateOfBirth.textContent
+
         userFirstName.textContent = popUpFirstName.value
         userDateOfBirth.textContent = popUpBirthdayDate.value
         userEmailAddress.textContent = popUpEmail.value
         userPhoneNumber.textContent = popUpPhoneNumber.value
+
+        for (let i = 0; i < events.length; i++) {
+            if (events[i].dateF2 === tempBirthdayDate) {
+                console.log('User data changed.')
+                events[i].name = popUpFirstName.value
+                events[i].dateF2 = popUpBirthdayDate.value
+                events[i].email = popUpEmail.value
+                events[i].phone = popUpPhoneNumber.value
+                localStorage.setItem('events', JSON.stringify(events))
+                refreshCalendar()
+            }
+        }
+
 
         closePopUp()
         popUpInfo.textContent = ''
@@ -260,7 +283,7 @@ const openModal = date => {
     if (eventForDay) {
 
         modalUserName.textContent = 'First name: ' + eventForDay.name
-        modalDateOfBirth.textContent = 'Date of Birth: ' + eventForDay.date
+        modalDateOfBirth.textContent = 'Date of Birth: ' + eventForDay.dateF2
         modalEmail.textContent = 'Email: ' + eventForDay.email
         modalPhone.textContent = 'Phone: ' + eventForDay.phone
         imageDescription.textContent = resultDescription
@@ -381,6 +404,8 @@ const refreshCalendar = () => {
             if (i > paddingDays) {
 
                 const eventForDay = events.find(element => element.birthday === MyBirthdayDateString)
+
+
                 dayNumber.innerText = i - paddingDays
 
                 if (i - paddingDays === day && nav === 0) {
@@ -389,9 +414,7 @@ const refreshCalendar = () => {
 
                 if (eventForDay) {
 
-                    console.log(eventForDay.date)
-
-                    const convertDate = eventForDay.date.replace(/[/]/g, '-')
+                    const convertDate = eventForDay.dateF2.replace(/[/]/g, '-')
                     const reversedDate = convertDate.split("-").reverse().join("-")
 
                     function getAge(dateString) {
