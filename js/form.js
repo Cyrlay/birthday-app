@@ -182,11 +182,14 @@ const editData = (e) => {
     popUpPhoneNumber.value = userPhoneNumber.textContent
 
     popUp.style.display = 'flex'
+
 }
 
 const deleteData = (e) => {
 
-    clicked = events.find(element => element.birthday === e.target.closest('li'))
+    UserDataEdit = e.target.closest('li')
+    childData = UserDataEdit.getElementsByTagName('div')[0]
+    userDateOfBirth = childData.getElementsByTagName('p')[1]
 
     e.target.closest('li').remove()
     const allData = cardList.querySelectorAll('li')
@@ -194,8 +197,13 @@ const deleteData = (e) => {
         cardList.textContent = ''
     }
 
-    events = events.filter(e => e.birthday !== clicked)
-    localStorage.setItem('events', JSON.stringify(events))
+    for (let i = 0; i < events.length; i++){
+        if(userDateOfBirth.textContent === events[i].dateF2){
+            console.log('asd')
+            events = events.filter(e => e.dateF2 !== userDateOfBirth.textContent)
+            localStorage.setItem('events', JSON.stringify(events))
+        }
+    }
 }
 
 const closePopUp = () => {
