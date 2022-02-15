@@ -231,6 +231,8 @@ const changeUserData = () => {
     } else {
 
         const tempBirthdayDate = userDateOfBirth.textContent
+        const newBirthDate = popUpBirthdayDate.value.replace(/-/g, "/")
+        const inputBirthDate = newBirthDate.split("/").reverse().join("/")
 
         userFirstName.textContent = popUpFirstName.value
         userDateOfBirth.textContent = popUpBirthdayDate.value
@@ -242,11 +244,12 @@ const changeUserData = () => {
                 console.log('User data changed.')
                 events[i].name = popUpFirstName.value
                 events[i].dateF2 = popUpBirthdayDate.value
+                events[i].birthday = inputBirthDate.slice(0, 5)
                 events[i].email = popUpEmail.value
                 events[i].phone = popUpPhoneNumber.value
                 localStorage.setItem('events', JSON.stringify(events))
-                refreshCalendar()
             }
+            refreshCalendar()
         }
 
 
