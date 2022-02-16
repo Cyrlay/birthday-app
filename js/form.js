@@ -249,34 +249,51 @@ const changeUserData = () => {
                 events[i].phone = popUpPhoneNumber.value
                 localStorage.setItem('events', JSON.stringify(events))
             }
-            refreshCalendar()
         }
-
+        refreshCalendar()
 
         closePopUp()
         popUpInfo.textContent = ''
     }
 }
 
-/*const apiKEY = 'MEJwDqfmlSOP7hFT8uZTgpOMzP0zDrKG7KbL6FYh'*/
-const apiKEY = 'lHF6o4HPxckX9Hy3GBsuliyQYDUljIhJhSR4qTRl'
-const URL = 'https://api.nasa.gov/planetary/apod?api_key=' + apiKEY
-
-axios.get(URL).then(res => {
-    resultIMG = res.data.url
-    resultDescription = res.data.explanation
-}).catch((err) => console.log(err))
-
-/*const setBackground = (date) => {
+const setBackground = (x, date, i) => {
+    const clicked = x
+    /*const apiKEY = 'MEJwDqfmlSOP7hFT8uZTgpOMzP0zDrKG7KbL6FYh'*/
     const apiKEY = 'lHF6o4HPxckX9Hy3GBsuliyQYDUljIhJhSR4qTRl'
-    const URL = 'https://api.nasa.gov/planetary/apod?api_key=' + apiKEY + '&date=' + date
-    axios.get(URL).then(res => {
-        console.log(res.data)
-        resultIMG = res.data.url
-        resultDescription = res.data.explanation
-    }).catch((err) => console.log(err))
-    console.log(resultIMG)
-}*/
+    let today = new Date().getTime() //dd-mm-YYYY
+    let expectedDate = new Date(i).getTime()
+    const eventForDay = events.find(e => e.birthday === clicked)
+
+    if (expectedDate < today) {
+
+        const URL = 'https://api.nasa.gov/planetary/apod?api_key=' + apiKEY + '&date=' + '2022-' + date
+        axios.get(URL).then(res => {
+
+            resultIMG = res.data.url
+            resultDescription = res.data.explanation
+
+            if (eventForDay) {
+                eventForDay.bgURL = resultIMG
+                localStorage.setItem('events', JSON.stringify(events))
+            }
+        }).catch((err) => console.log(err))
+    } else {
+
+        const URL = 'https://api.nasa.gov/planetary/apod?api_key=' + apiKEY + '&date=' + '2021-' + date
+        axios.get(URL).then(res => {
+
+            resultIMG = res.data.url
+            resultDescription = res.data.explanation
+
+            if (eventForDay) {
+                eventForDay.bgURL = resultIMG
+                localStorage.setItem('events', JSON.stringify(events))
+            }
+
+        }).catch((err) => console.log(err))
+    }
+}
 
 const openModal = date => {
 
@@ -285,19 +302,20 @@ const openModal = date => {
 
     if (eventForDay) {
 
+        modal.style.backgroundImage = ``
+
         modalUserName.textContent = 'First name: ' + eventForDay.name
         modalDateOfBirth.textContent = 'Date of Birth: ' + eventForDay.dateF2
         modalEmail.textContent = 'Email: ' + eventForDay.email
         modalPhone.textContent = 'Phone: ' + eventForDay.phone
         imageDescription.textContent = resultDescription
-        modal.style.backgroundImage = `url('${resultIMG}')`
+
+        const convertDate = eventForDay.date.replace(/[/]/g, '-')
+        const reversedDate = convertDate.split("-").reverse().join("-")
+
+        modal.style.backgroundImage = `url('${eventForDay.bgURL}')`
 
         closeButton.addEventListener('click', closeModal)
-
-        /*const convertDate = eventForDay.date.replace(/[/]/g, '-')
-        const reversedDate = convertDate.split("-").reverse().join("-")*/
-
-        /*setBackground(reversedDate)*/
 
         modal.append(modalUserName, modalDateOfBirth, modalEmail, modalPhone, imageDescription, closeButton)
 
@@ -408,7 +426,7 @@ const refreshCalendar = () => {
 
                 const eventForDay = events.find(element => element.birthday === MyBirthdayDateString)
 
-
+                "https://apod.nasa.gov/apod/image/2102/PIA24264-1900.jpg"
                 dayNumber.innerText = i - paddingDays
 
                 if (i - paddingDays === day && nav === 0) {
@@ -419,6 +437,11 @@ const refreshCalendar = () => {
 
                     const convertDate = eventForDay.dateF2.replace(/[/]/g, '-')
                     const reversedDate = convertDate.split("-").reverse().join("-")
+                    const temp = eventForDay.birthday.replace(/[/]/g, '-')
+                    const ddmm = temp.split("-").reverse().join("-")
+                    let unixDateFormat = temp + '-' + year
+                    let unixDate = new Date(unixDateFormat).getTime()
+
                     const reversedDateYear = new Date(eventForDay.dateF2).getFullYear()
 
                     function getAge(dateString) {
@@ -432,7 +455,9 @@ const refreshCalendar = () => {
                         return age
                     }
 
-                    daySquare.style.backgroundImage = `url('${resultIMG}')`
+                    setBackground(MyBirthdayDateString, ddmm, unixDate)
+                    daySquare.style.backgroundImage = `url('${eventForDay.bgURL}')`
+
                     dayNumber.classList.add('eventday')
                     dayNumber.innerText = `${eventForDay.name} \n ${eventForDay.email} \n ${eventForDay.phone} \n Age: ${getAge(reversedDateYear)}`
                     daySquare.addEventListener('click', () => openModal(MyBirthdayDateString))
