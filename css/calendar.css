@@ -4,27 +4,20 @@
     align-items: center;
 }
 
-#caleandar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-}
-
-.cld-main {
+.cal-main {
     width: auto;
     height: 100%;
 }
 
-.cld-main a {
+.cal-main a {
     color: var(--light-blue);
 }
 
-.cld-main svg {
+.cal-main svg {
     fill: var(--light-blue);
 }
 
-.cld-datetime {
+.cal-datetime {
     position: relative;
     width: 66%;
     min-width: 100px;
@@ -34,7 +27,7 @@
     margin: 5px auto auto;
 }
 
-.cld-datetime .today {
+.cal-datetime .today {
     position: relative;
     float: left;
     width: calc(100% - 40px);
@@ -42,50 +35,50 @@
     text-align: center;
 }
 
-.cld-nav {
+.cal-nav {
     position: relative;
     width: 20px;
     height: 20px;
     margin-top: 2px;
 }
 
-.cld-nav:hover {
+.cal-nav:hover {
     cursor: pointer;
 }
 
-.cld-nav:hover svg {
+.cal-nav:hover svg {
     fill: var(--light-blue);
 }
 
-.cld-rwd {
+.cal-rwd {
     float: left;
 }
 
-.cld-fwd {
+.cal-fwd {
     float: right;
 }
 
-.cld-nav svg:hover {
+.cal-nav svg:hover {
 
 }
 
-.cld-days {
+.cal-days {
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
     height: 100%;
 }
 
-.cld-labels {
+.cal-labels {
     margin-top: 25px;
     display: flex;
 }
 
-.cld-labels, .cld-days {
+.cal-labels, .cal-days {
     padding-left: 0;
 }
 
-.cld-label, .cld-day {
+.cal-label, .cal-day {
     box-sizing: border-box;
     display: inline-block;
     width: 14.28%;
@@ -93,24 +86,24 @@
     text-align: center;
 }
 
-.cld-day {
+.cal-day {
     border: 1px solid var(--light-green);
 }
 
-.cld-day.today .cld-number {
+.cal-day.today .cal-number {
     background: var(--light-blue);
     color: var(--primary-color);
 }
 
-.cld-day.disableDay {
+.cal-day.disableDay {
     opacity: 0.5;
 }
 
-.cld-day.nextMonth, .cld-day.prevMonth {
+.cal-day.nextMonth, .cal-day.prevMonth {
     opacity: 0.33;
 }
 
-.cld-number {
+.cal-number {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -119,7 +112,7 @@
     height: 100%;
 }
 
-.cld-title {
+.cal-title {
     position: absolute;
     z-index: 5;
     display: none;
@@ -131,11 +124,11 @@
     font-size: 12px;
 }
 
-.cld-number:hover .cld-title {
+.cal-number:hover .cal-title {
     display: block;
 }
 
-.cld-title::before {
+.cal-title::before {
     content: '';
     position: absolute;
     top: -7.5px;
@@ -147,18 +140,18 @@
     border-bottom: 8px solid var(--primary-color);
 }
 
-.cld-number.eventday {
+.cal-number.eventday {
     font-weight: bold;
     font-size: 10px;
     color: var(--light-blue);
 }
 
-.cld-number.eventday:hover {
+.cal-number.eventday:hover {
     cursor: pointer;
     background: var(--primary-color);
 }
 
-.today .cld-number.eventday:hover {
+.today .cal-number.eventday:hover {
     background: var(--light-blue);
 }
 

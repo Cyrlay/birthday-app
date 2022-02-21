@@ -1,8 +1,8 @@
 let firstName, birthDate, email, phoneNumber, addBtn, cardList, popUp, popUpInfo, UserDataEdit, popUpFirstName,
     popUpBirthdayDate, popUpEmail, popUpPhoneNumber, popUpAddBtn, popUpCloseBtn, errorInfo, childData, userFirstName,
     userDateOfBirth, userEmailAddress, userPhoneNumber, modal, navigation, labels, calendar, modalUserName,
-    modalDateOfBirth, modalEmail, modalPhone, imageDescription, closeButton, resultIMG, resultDescription, nav = 0,
-    clicked = null
+    modalDateOfBirth, modalEmail, modalPhone, imageDescription, closeButton, nav = 0, clicked = null,
+    resultIMG = '', resultDescription = ''
 
 let events = localStorage.getItem('events') ? JSON.parse(localStorage.getItem('events')) : []
 const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
@@ -35,9 +35,9 @@ const prepareDOMElements = () => {
     popUpCloseBtn = document.querySelector('.cancel')
     errorInfo = document.querySelector('.error-message')
 
-    navigation = document.querySelector('.cld-datetime')
-    labels = document.querySelector('.cld-labels')
-    calendar = document.querySelector('.cld-days')
+    navigation = document.querySelector('.cal-datetime')
+    labels = document.querySelector('.cal-labels')
+    calendar = document.querySelector('.cal-days')
     modal = document.getElementById('modalEvent');
     modalUserName = document.querySelector('.modal-user-name')
     modalDateOfBirth = document.querySelector('.modal-date-of-birth')
@@ -216,6 +216,7 @@ const deleteData = (e) => {
 const closePopUp = () => {
     popUp.style.display = 'none'
     popUpInfo.textContent = ''
+    refreshCalendar()
 }
 
 const changeUserData = () => {
@@ -250,8 +251,6 @@ const changeUserData = () => {
                 localStorage.setItem('events', JSON.stringify(events))
             }
         }
-        refreshCalendar()
-
         closePopUp()
         popUpInfo.textContent = ''
     }
@@ -278,6 +277,7 @@ const setBackground = (x, date, i) => {
                 localStorage.setItem('events', JSON.stringify(events))
             }
         }).catch((err) => console.log(err))
+
     } else {
 
         const URL = 'https://api.nasa.gov/planetary/apod?api_key=' + apiKEY + '&date=' + '2021-' + date
@@ -364,8 +364,8 @@ const refreshCalendar = () => {
         navigation.textContent = ''
         let rwd = document.createElement('div')
         rwd.setAttribute('id', 'backButton')
-        rwd.classList.add('cld-rwd')
-        rwd.classList.add('cld-nav')
+        rwd.classList.add('cal-rwd')
+        rwd.classList.add('cal-nav')
 
         rwd.addEventListener('click', () => {
             nav--
@@ -383,8 +383,8 @@ const refreshCalendar = () => {
 
         let fwd = document.createElement('div')
         fwd.setAttribute('id', 'nextButton')
-        fwd.classList.add('cld-fwd')
-        fwd.classList.add('cld-nav')
+        fwd.classList.add('cal-fwd')
+        fwd.classList.add('cal-nav')
 
         fwd.addEventListener('click', () => {
             nav++
@@ -400,7 +400,7 @@ const refreshCalendar = () => {
         const labelsList = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
         for (let i = 0; i < labelsList.length; i++) {
             let label = document.createElement('li')
-            label.className += "cld-label"
+            label.className += "cal-label"
             label.textContent = labelsList[i]
             labels.appendChild(label)
         }
@@ -411,10 +411,10 @@ const refreshCalendar = () => {
         calendar.textContent = ''
         for (let i = 1; i <= paddingDays + daysInMonth; i++) {
             const daySquare = document.createElement('li')
-            daySquare.classList.add('cld-day')
+            daySquare.classList.add('cal-day')
 
             const dayNumber = document.createElement('p')
-            dayNumber.classList.add('cld-number')
+            dayNumber.classList.add('cal-number')
             daySquare.appendChild(dayNumber)
 
             /*const dayString = `${i - paddingDays}/${month + 1}/${year}`;
@@ -471,11 +471,11 @@ const refreshCalendar = () => {
 
         for (let i = paddingDays + daysInMonth; i < 42; i++) {
             const daySquare = document.createElement('li')
-            daySquare.classList.add('cld-day')
+            daySquare.classList.add('cal-day')
             daySquare.classList.add('nextMonth')
 
             const dayNumber = document.createElement('p')
-            dayNumber.classList.add('cld-number')
+            dayNumber.classList.add('cal-number')
             dayNumber.textContent = '*'
             daySquare.appendChild(dayNumber)
 

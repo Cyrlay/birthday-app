@@ -415,11 +415,11 @@ body {
         width: auto;
     }
 
-    .cld-number.eventday {
+    .cal-number.eventday {
         font-size: 7px;
     }
 
-    .cld-label, .cld-day {
+    .cal-label, .cal-day {
         height: auto;
     }
 }
